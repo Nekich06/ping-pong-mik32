@@ -27,11 +27,12 @@ void SSD1306_GPIO_Pins_Init()
   PAD_CONFIG->PORT_0_DS |= 0 << (DC_PIN * 2);
   PAD_CONFIG->PORT_0_PUPD |= 0 << (DC_PIN * 2);
 
-  PAD_CONFIG->PORT_0_CFG |= 0b01 << (CS_PIN * 2);
+  PAD_CONFIG->PORT_0_CFG |= 0 << (CS_PIN * 2);
   PAD_CONFIG->PORT_0_DS |= 0 << (CS_PIN * 2);
   PAD_CONFIG->PORT_0_PUPD |= 0 << (CS_PIN * 2);
 
   GPIO_0->DIRECTION_OUT = 1 << RES_PIN | 1 << DC_PIN | 1 << CS_PIN;
   HAL_GPIO_WritePin(CS_PORT, 1 << CS_PIN, GPIO_PIN_HIGH);
 }
+
 

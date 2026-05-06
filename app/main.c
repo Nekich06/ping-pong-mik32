@@ -1,7 +1,5 @@
 #include "mik32_hal_usart.h"
 #include "ssd1306_spi.h"
-#include "spi_functions.h"
-#include "ssd1306_gpio_config.h"
 #include "scr1_timer_delay.h"
 
 static void USART_Init();
@@ -13,21 +11,19 @@ int main()
 {
   SystemClock_Config();
   USART_Init();
-  SSD1306_GPIO_Pins_Init();
-  SPI_Init();
+
+  SCR1_Timer_Delay(3000000);
 
   SSD1306_Begin(SSD1306_SWITCHCAPVCC, true);
   SSD1306_ClearDisplay();
   SSD1306_Display();
-  SCR1_Timer_Delay(2000000);
 
   while (1)
   {
+    SSD1306_ClearDisplay();
     SSD1306_DrawPixel(64, 32, SSD1306_WHITE);
     SSD1306_Display();
-    HAL_USART_Print(&husart0, "DRAW\r\n", USART_TIMEOUT_DEFAULT);
-    SCR1_Timer_Delay(1000000);
-    SSD1306_ClearDisplay();
+    SCR1_Timer_Delay(3000000);
   }
 }
 
@@ -91,3 +87,4 @@ void USART_Init()
   husart0.baudrate = 115200;
   HAL_USART_Init(&husart0);
 }
+

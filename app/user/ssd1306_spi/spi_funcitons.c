@@ -12,8 +12,8 @@ void SPI_Init(void)
       .SPI_Mode    = HAL_SPI_MODE_MASTER,
       .BaudRateDiv = SPI_BAUDRATE_DIV64,
       .ManualCS    = SPI_MANUALCS_OFF,
-      .CLKPhase    = SPI_PHASE_ON,
-      .CLKPolarity = SPI_POLARITY_HIGH,
+      .CLKPhase    = SPI_PHASE_OFF,
+      .CLKPolarity = SPI_POLARITY_LOW,
       .Decoder     = SPI_DECODER_NONE,
       .ChipSelect  = SPI_CS_0
   };
@@ -47,3 +47,4 @@ void SPI_Set_DC_State(GPIO_PinState pin_state)
 {
   HAL_GPIO_WritePin(DC_PORT, 1 << DC_PIN, pin_state);
 }
+

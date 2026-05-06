@@ -7,7 +7,7 @@ ENTRY(_enter)
 MEMORY
 {
     ram (RWX) : ORIGIN = 0x02000000, LENGTH = 16K /* Internal 16 Kb SRAM*/
-    rom (RX) :ORIGIN = 0x01000000, LENGTH = 8K /* FLASH 8 Mb */
+    rom (RX) :ORIGIN = 0x80000000, LENGTH = 8K /* FLASH 8 Mb */
 }
 
 SECTIONS

@@ -26,7 +26,7 @@
 
 // Hardware Configuration Commands
 #define SSD1306_SETSTARTLINE        0x40
-#define SSD1306_SEGREMAP            0xA0
+#define SSD1306_SEGREMAP            0xA1
 #define SSD1306_SETMULTIPLEX        0xA8
 #define SSD1306_COMSCANINC          0xC0
 #define SSD1306_COMSCANDEC          0xC8
@@ -55,13 +55,12 @@
 #define SSD1306_WHITE   1
 #define SSD1306_INVERSE 2
 
-bool SSD1306_Begin(uint8_t vcs, bool reset) __attribute__((section(".ram_text.display_begin")));
-void SSD1306_ClearDisplay(void) __attribute__((section(".ram_text.display_clear")));
-void SSD1306_Display(void) __attribute__((section(".ram_text.display")));
-void SSD1306_DrawPixel(int16_t x, int16_t y, uint16_t color) __attribute__((section(".ram_text.pixel")));
-void SSD1306_SendSingleCommand(uint8_t command) __attribute__((section(".ram_text.single_command")));
+bool SSD1306_Begin(uint8_t vcs, bool reset);
+void SSD1306_ClearDisplay(void);
+void SSD1306_Display(void);
+void SSD1306_DrawPixel(int16_t x, int16_t y, uint16_t color);
+void SSD1306_SendSingleCommand(uint8_t command);
 void SSD1306_SendMultipleCommands(uint8_t * commands, uint8_t size);
-void SSD1306_SendSingleData(uint8_t data) __attribute__((section(".ram_text.single_data")));
 void SSD1306_SendData(uint8_t * data, uint16_t size);
 
 #endif
