@@ -7,7 +7,7 @@
 #include "ssd1306_gpio_config.h"
 
 #define SSD1306_SWAP(a, b) (((a) ^= (b)), ((b) ^= (a)), ((a) ^= (b)))
-#define DISPLAY_BUF_SIZE (((SSD1306_WIDTH * SSD1306_HEIGHT) / 8))
+#define DISPLAY_BUF_SIZE ((SSD1306_WIDTH * ((SSD1306_HEIGHT + 7) / 8)))
 
 uint8_t display_buffer[DISPLAY_BUF_SIZE];
 
@@ -17,11 +17,11 @@ bool SSD1306_Begin(uint8_t vcs, bool reset)
   SSD1306_GPIO_Pins_Init();
   SPI_Init();
 
-  // SPI_Set_Reset_State(GPIO_PIN_HIGH);
-  // SCR1_Timer_Delay(1000);
-  // SPI_Set_Reset_State(GPIO_PIN_LOW);
-  // SCR1_Timer_Delay(10000);
-  // SPI_Set_Reset_State(GPIO_PIN_HIGH);
+  SPI_Set_Reset_State(GPIO_PIN_HIGH);
+  SCR1_Timer_Delay(1000);
+  SPI_Set_Reset_State(GPIO_PIN_LOW);
+  SCR1_Timer_Delay(10000);
+  SPI_Set_Reset_State(GPIO_PIN_HIGH);
 
   uint8_t init_data[] =
   {
@@ -31,18 +31,18 @@ bool SSD1306_Begin(uint8_t vcs, bool reset)
     SSD1306_SETMULTIPLEX,
     SSD1306_HEIGHT - 1,
     SSD1306_SETDISPLAYOFFSET,
-    0x00,
-    SSD1306_SETSTARTLINE,
+    0x0,
+    SSD1306_SETSTARTLINE | 0x0,
     SSD1306_CHARGEPUMP,
     (vcs == SSD1306_EXTERNALVCC) ? 0x10 : 0x14,
     SSD1306_MEMORYMODE,
     0x00,
-    SSD1306_SEGREMAP,
+    SSD1306_SEGREMAP | 0x1,
     SSD1306_COMSCANDEC,
     SSD1306_SETCOMPINS,
     0x12,
     SSD1306_SETCONTRAST,
-    (vcs == SSD1306_EXTERNALVCC) ? 0x9F : 0xFF,
+    (vcs == SSD1306_EXTERNALVCC) ? 0x9F : 0xCF,
     SSD1306_SETPRECHARGE,
     (vcs == SSD1306_EXTERNALVCC) ? 0x22 : 0xF1,
     SSD1306_SETVCOMDETECT,
@@ -75,17 +75,19 @@ void SSD1306_Display(void)
   {
     SSD1306_PAGEADDR,
     0x00,
-    0x07,
+    0xFF,
     SSD1306_COLUMNADDR,
     0x00,
     SSD1306_WIDTH - 1
   };
 
   SPI_Set_CS_State(GPIO_PIN_LOW);
-
   SSD1306_SendMultipleCommands(data, sizeof(data));
-  SSD1306_SendData(display_buffer, DISPLAY_BUF_SIZE);
+  SPI_Set_CS_State(GPIO_PIN_HIGH);
+  SCR1_Timer_Delay(1000);
 
+  SPI_Set_CS_State(GPIO_PIN_LOW);
+  SSD1306_SendData(display_buffer, DISPLAY_BUF_SIZE);
   SPI_Set_CS_State(GPIO_PIN_HIGH);
 }
 

@@ -26,7 +26,7 @@
 
 // Hardware Configuration Commands
 #define SSD1306_SETSTARTLINE        0x40
-#define SSD1306_SEGREMAP            0xA1
+#define SSD1306_SEGREMAP            0xA0
 #define SSD1306_SETMULTIPLEX        0xA8
 #define SSD1306_COMSCANINC          0xC0
 #define SSD1306_COMSCANDEC          0xC8

@@ -21,7 +21,7 @@ int main()
   while (1)
   {
     SSD1306_ClearDisplay();
-    SSD1306_DrawPixel(64, 32, SSD1306_WHITE);
+    SSD1306_DrawPixel(127, 63, SSD1306_WHITE);
     SSD1306_Display();
     SCR1_Timer_Delay(3000000);
   }
