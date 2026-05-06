@@ -14,6 +14,9 @@ extern uint8_t __sp;
 extern const uint8_t __data_source_start;
 extern uint8_t __data_target_start;
 extern uint8_t __data_target_end;
+extern const uint8_t __ram_text_source_start;
+extern uint8_t __ram_text_target_start;
+extern uint8_t __ram_text_target_end;
 
 extern function_t __init_array_start;
 extern function_t __init_array_end;
@@ -83,6 +86,9 @@ void _start(void) {
 
     // Initialize the .data section (global variables with initial values)
     memcpy((void*)&__data_target_start, (const void*)&__data_source_start, (&__data_target_end - &__data_target_start));
+
+    // Initialize the .ram_text section (ram-functions)
+    memcpy((void*)&__ram_text_target_start, (const void*)&__ram_text_source_start, (&__ram_text_target_end - &__ram_text_target_start));
 
     // Call constructors
     for (const function_t* entry = &__preinit_array_start; entry < &__preinit_array_end; ++entry) {

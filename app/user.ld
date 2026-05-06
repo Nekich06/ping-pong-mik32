@@ -7,7 +7,7 @@ ENTRY(_enter)
 MEMORY
 {
     ram (RWX) : ORIGIN = 0x02000000, LENGTH = 16K /* Internal 16 Kb SRAM*/
-    rom (RX) :ORIGIN = 0x01000000, LENGTH = 8K /* Internal eeprom 8 Kb */
+    rom (RX) :ORIGIN = 0x01000000, LENGTH = 8K /* FLASH 8 Mb */
 }
 
 SECTIONS
@@ -75,14 +75,24 @@ SECTIONS
      * The following sections contain data which is copied from read-only
      * memory into a RAM memory
      */
-     
+
+    .ram_text : {
+        PROVIDE(__ram_text_start = .);
+        KEEP(*(.ram_text.*))
+        PROVIDE(__ram_text_end = .);
+    } >ram AT>rom
+
+    PROVIDE( __ram_text_source_start = LOADADDR(.ram_text) );
+    PROVIDE( __ram_text_target_start = ADDR(.ram_text) );
+    PROVIDE( __ram_text_target_end = ADDR(.ram_text) + SIZEOF(.ram_text) );
+
 
     .data : ALIGN(4) {
         PROVIDE(__data_start = .);
         *(.data .data.*)
         *(.gnu.linkonce.d.*)
         . = ALIGN(4);
-        /*__global_pointer$ - 12bit offset from start of .sdata section, used for Linker Relaxation. 
+        /*__global_pointer$ - 12bit offset from start of .sdata section, used for Linker Relaxation.
           Should be written to the gp register
         */
         PROVIDE( __global_pointer = . + 0x800 );
@@ -94,7 +104,7 @@ SECTIONS
         *(.sdata .sdata.* .sdata2.*)
         *(.gnu.linkonce.s.*)
         PROVIDE(__data_end = .);
-    } >ram AT>rom 
+    } >ram AT>rom
 
     PROVIDE( __data_source_start = LOADADDR(.data) );
     PROVIDE( __data_target_start = ADDR(.data) );
@@ -109,7 +119,7 @@ SECTIONS
         *(.gnu.linkonce.b.*)
         *(COMMON)
         __bss_end = .;
-    } >ram 
+    } >ram
 
     __stack_size = DEFINED(__stack_size) ? __stack_size : 1024;
     PROVIDE(__stack_size = __stack_size);
@@ -118,5 +128,5 @@ SECTIONS
     {
       . = __stack_size;
       PROVIDE( __sp = . );
-    } >ram 
+    } >ram
 }
