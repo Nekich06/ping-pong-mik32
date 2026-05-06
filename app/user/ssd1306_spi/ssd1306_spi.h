@@ -58,7 +58,9 @@
 bool SSD1306_Begin(uint8_t vcs, bool reset);
 void SSD1306_ClearDisplay(void);
 void SSD1306_Display(void);
-void SSD1306_DrawPixel(int16_t x, int16_t y, uint16_t color);
+void SSD1306_DrawPixelInternal(int16_t x, int16_t y, uint16_t color);
+void SSD1306_DrawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
+void SSD1306_DrawFastVLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
 void SSD1306_SendSingleCommand(uint8_t command);
 void SSD1306_SendMultipleCommands(uint8_t * commands, uint8_t size);
 void SSD1306_SendData(uint8_t * data, uint16_t size);
