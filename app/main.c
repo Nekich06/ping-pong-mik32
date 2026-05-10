@@ -19,9 +19,12 @@ int main()
   SSD1306_ClearDisplay();
   SSD1306_Display();
 
+  SSD1306_DefaultCursorInit();
   while (1)
   {
-    SSD1306_DrawChar(64, 32, 'A', SSD1306_WHITE, SSD1306_BLACK, 2, 2);
+    SSD1306_SetCursor(12, 10);
+    SSD1306_SetTextSize(2);
+    SSD1306_WriteText("Hello, world!", 14);
     SSD1306_Display();
     SCR1_Timer_Delay(3000000);
   }

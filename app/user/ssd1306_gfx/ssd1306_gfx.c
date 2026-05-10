@@ -96,3 +96,58 @@ void SSD1306_DrawChar(int16_t x, int16_t y, unsigned char c,
       SSD1306_FillRect(x + 5 * size_x, y, size_x, 8 * size_y, bg);
   }
 }
+
+void SSD1306_DefaultCursorInit(void)
+{
+  cursor.x = 0;
+  cursor.y = 0;
+  cursor.size_x = 1;
+  cursor.size_y = 1;
+  cursor.color = SSD1306_WHITE;
+  cursor.bg = SSD1306_BLACK;
+}
+
+void SSD1306_SetCursor(int16_t x, int16_t y)
+{
+  cursor.x = x;
+  cursor.y = y;
+}
+
+void SSD1306_SetTextSize(uint8_t size)
+{
+  cursor.size_x = size;
+  cursor.size_y = size;
+}
+
+void SSD1306_SetTextColor(uint16_t color)
+{
+  cursor.color = color;
+}
+
+void SSD1306_SetTextBackgroundColor(uint16_t bg_color)
+{
+  cursor.bg = bg_color;
+}
+
+void SSD1306_WriteText(char * text, size_t length)
+{
+  for (size_t i = 0; i < length; ++i)
+  {
+    unsigned char c = text[i];
+    if (c == '\n')
+    {
+      cursor.x = 0;
+      cursor.y += cursor.size_y * 8;
+    }
+    else if (c != '\r')
+    {
+      if ((cursor.x + cursor.size_x * 6) > SSD1306_WIDTH)
+      {
+        cursor.x = 0;
+        cursor.y += cursor.size_y * 8;
+      }
+      SSD1306_DrawChar(cursor.x, cursor.y, c, cursor.color, cursor.bg, cursor.size_x, cursor.size_y);
+      cursor.x += cursor.size_x * 6;
+    }
+  }
+}
