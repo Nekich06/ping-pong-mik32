@@ -21,10 +21,7 @@ int main()
 
   while (1)
   {
-    SSD1306_ClearDisplay();
-    SSD1306_FillRect(0, 24, SSD1306_WIDTH / 32, SSD1306_HEIGHT / 4, SSD1306_WHITE);
-    SSD1306_FillRect(124, 24, SSD1306_WIDTH / 32, SSD1306_HEIGHT / 4, SSD1306_WHITE);
-    SSD1306_FillCircle(64, 32, 2, SSD1306_WHITE);
+    SSD1306_DrawChar(64, 32, 'A', SSD1306_WHITE, SSD1306_BLACK, 2, 2);
     SSD1306_Display();
     SCR1_Timer_Delay(3000000);
   }

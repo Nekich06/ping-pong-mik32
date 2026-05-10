@@ -5,5 +5,8 @@
 
 void SSD1306_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 void SSD1306_FillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+void SSD1306_DrawChar(int16_t x, int16_t y, unsigned char c,
+                      uint16_t color, uint16_t bg, uint8_t size_x,
+                      uint8_t size_y);
 
 #endif

@@ -1,4 +1,5 @@
 #include "ssd1306_gfx.h"
+#include "font.h"
 
 static void SSD1306_FillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t corners, int16_t delta, uint16_t color);
 
@@ -58,4 +59,40 @@ void SSD1306_FillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t corners
   }
 }
 
+void SSD1306_DrawChar(int16_t x, int16_t y, unsigned char c,
+                      uint16_t color, uint16_t bg, uint8_t size_x,
+                      uint8_t size_y)
+{
+  if ((x >= SSD1306_WIDTH) ||
+      (y >= SSD1306_HEIGHT) ||
+      ((x + 6 * size_x - 1) < 0) ||
+      ((y + 8 * size_y - 1) < 0))
+    return;
 
+  for (int8_t i = 0; i < 5; i++)
+  {
+    uint8_t line = font[c * 5 + i];
+    for (int8_t j = 0; j < 8; j++, line >>= 1)
+    {
+      if (line & 1) {
+        if (size_x == 1 && size_y == 1)
+          SSD1306_DrawPixelInternal(x + i, y + j, color);
+        else
+          SSD1306_FillRect(x + i * size_x, y + j * size_y, size_x, size_y,
+                        color);
+      } else if (bg != color) {
+        if (size_x == 1 && size_y == 1)
+          SSD1306_DrawPixelInternal(x + i, y + j, bg);
+        else
+          SSD1306_FillRect(x + i * size_x, y + j * size_y, size_x, size_y, bg);
+      }
+    }
+  }
+  if (bg != color)
+  {
+    if (size_x == 1 && size_y == 1)
+      SSD1306_DrawFastVLineInternal(x + 5, y, 8, bg);
+    else
+      SSD1306_FillRect(x + 5 * size_x, y, size_x, 8 * size_y, bg);
+  }
+}
