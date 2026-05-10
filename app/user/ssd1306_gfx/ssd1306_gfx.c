@@ -1,5 +1,7 @@
 #include "ssd1306_gfx.h"
 
+static void SSD1306_FillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t corners, int16_t delta, uint16_t color);
+
 void SSD1306_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
   for (int16_t i = x; i < x + w; i++)

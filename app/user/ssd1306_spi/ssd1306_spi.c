@@ -1,4 +1,4 @@
-    #include "ssd1306_spi.h"
+#include "ssd1306_spi.h"
 
 #include <string.h>
 
@@ -11,17 +11,23 @@
 
 uint8_t display_buffer[DISPLAY_BUF_SIZE];
 
-bool SSD1306_Begin(uint8_t vcs, bool reset)
+static void SSD1306_SendCommands(uint8_t * commands, uint8_t size);
+static void SSD1306_SendData(uint8_t * data, uint16_t size);
+
+void SSD1306_Begin(uint8_t vcs, bool reset)
 {
   SSD1306_ClearDisplay();
   SSD1306_GPIO_Pins_Init();
   SPI_Init();
 
-  SPI_Set_Reset_State(GPIO_PIN_HIGH);
-  SCR1_Timer_Delay(1000);
-  SPI_Set_Reset_State(GPIO_PIN_LOW);
-  SCR1_Timer_Delay(10000);
-  SPI_Set_Reset_State(GPIO_PIN_HIGH);
+  if (reset)
+  {
+    SPI_Set_Reset_State(GPIO_PIN_HIGH);
+    SCR1_Timer_Delay(1000);
+    SPI_Set_Reset_State(GPIO_PIN_LOW);
+    SCR1_Timer_Delay(10000);
+    SPI_Set_Reset_State(GPIO_PIN_HIGH);
+  }
 
   uint8_t init_data[] =
   {
@@ -54,12 +60,8 @@ bool SSD1306_Begin(uint8_t vcs, bool reset)
   };
 
   SPI_Set_CS_State(GPIO_PIN_LOW);
-
-  SSD1306_SendMultipleCommands(init_data, sizeof(init_data));
-
+  SSD1306_SendCommands(init_data, sizeof(init_data));
   SPI_Set_CS_State(GPIO_PIN_HIGH);
-
-  return true;
 }
 
 void SSD1306_ClearDisplay(void)
@@ -82,7 +84,7 @@ void SSD1306_Display(void)
   };
 
   SPI_Set_CS_State(GPIO_PIN_LOW);
-  SSD1306_SendMultipleCommands(data, sizeof(data));
+  SSD1306_SendCommands(data, sizeof(data));
   SPI_Set_CS_State(GPIO_PIN_HIGH);
   SCR1_Timer_Delay(1000);
 
@@ -247,13 +249,7 @@ void SSD1306_DrawFastVLineInternal(int16_t x, int16_t y, int16_t h, uint16_t col
   }
 }
 
-void SSD1306_SendSingleCommand(uint8_t command)
-{
-  SPI_Set_DC_State(GPIO_PIN_LOW);
-  SPI_Transfer(&command, 1);
-}
-
-void SSD1306_SendMultipleCommands(uint8_t * commands, uint8_t size)
+void SSD1306_SendCommands(uint8_t * commands, uint8_t size)
 {
   SPI_Set_DC_State(GPIO_PIN_LOW);
   SPI_Transfer(commands, size);
