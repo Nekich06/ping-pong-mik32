@@ -1,0 +1,28 @@
+#include "buttons_gpio_config.h"
+
+#include "mik32_hal_gpio.h"
+#include "power_manager.h"
+#include "pad_config.h"
+#include "gpio.h"
+
+void Buttons_GPIO_Pins_Init()
+{
+  PAD_CONFIG->PORT_0_CFG |= 0 << (BUTTON_DOWN_PLAYER_1_PIN * 2);
+  PAD_CONFIG->PORT_0_DS |= 0 << (BUTTON_DOWN_PLAYER_1_PIN * 2);
+  PAD_CONFIG->PORT_0_PUPD |= 0 << (BUTTON_DOWN_PLAYER_1_PIN * 2);
+
+  PAD_CONFIG->PORT_0_CFG |= 0 << (BUTTON_UP_PLAYER_1_PIN * 2);
+  PAD_CONFIG->PORT_0_DS |= 0 << (BUTTON_UP_PLAYER_1_PIN * 2);
+  PAD_CONFIG->PORT_0_PUPD |= 0 << (BUTTON_UP_PLAYER_1_PIN * 2);
+
+  PAD_CONFIG->PORT_0_CFG |= 0 << (BUTTON_DOWN_PLAYER_2_PIN * 2);
+  PAD_CONFIG->PORT_0_DS |= 0 << (BUTTON_DOWN_PLAYER_2_PIN * 2);
+  PAD_CONFIG->PORT_0_PUPD |= 0 << (BUTTON_DOWN_PLAYER_2_PIN * 2);
+
+  PAD_CONFIG->PORT_0_CFG |= 0 << (BUTTON_UP_PLAYER_2_PIN * 2);
+  PAD_CONFIG->PORT_0_DS |= 0 << (BUTTON_UP_PLAYER_2_PIN * 2);
+  PAD_CONFIG->PORT_0_PUPD |= 0 << (BUTTON_UP_PLAYER_2_PIN * 2);
+
+  GPIO_1->DIRECTION_OUT = 1 << BUTTON_DOWN_PLAYER_1_PIN | 1 << BUTTON_UP_PLAYER_1_PIN |
+                          1 << BUTTON_DOWN_PLAYER_2_PIN | 1 << BUTTON_UP_PLAYER_2_PIN ;
+}

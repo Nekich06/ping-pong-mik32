@@ -1,6 +1,16 @@
 #include "ssd1306_gfx.h"
 #include "font.h"
 
+static struct TextCursor
+{
+  int16_t x;
+  int16_t y;
+  uint8_t size_x;
+  uint8_t size_y;
+  uint16_t color;
+  uint16_t bg;
+} cursor;
+
 static void SSD1306_FillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t corners, int16_t delta, uint16_t color);
 
 void SSD1306_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
@@ -129,25 +139,30 @@ void SSD1306_SetTextBackgroundColor(uint16_t bg_color)
   cursor.bg = bg_color;
 }
 
-void SSD1306_WriteText(char * text, size_t length)
+void SSD1306_WriteText(char * text)
 {
-  for (size_t i = 0; i < length; ++i)
+  if (text)
   {
-    unsigned char c = text[i];
-    if (c == '\n')
+    size_t i = 0;
+    while (text[i] != '\0')
     {
-      cursor.x = 0;
-      cursor.y += cursor.size_y * 8;
-    }
-    else if (c != '\r')
-    {
-      if ((cursor.x + cursor.size_x * 6) > SSD1306_WIDTH)
+      unsigned char c = text[i];
+      if (c == '\n')
       {
         cursor.x = 0;
         cursor.y += cursor.size_y * 8;
       }
-      SSD1306_DrawChar(cursor.x, cursor.y, c, cursor.color, cursor.bg, cursor.size_x, cursor.size_y);
-      cursor.x += cursor.size_x * 6;
+      else if (c != '\r')
+      {
+        if ((cursor.x + cursor.size_x * 6) > SSD1306_WIDTH)
+        {
+          cursor.x = 0;
+          cursor.y += cursor.size_y * 8;
+        }
+        SSD1306_DrawChar(cursor.x, cursor.y, c, cursor.color, cursor.bg, cursor.size_x, cursor.size_y);
+        cursor.x += cursor.size_x * 6;
+      }
+      ++i;
     }
   }
 }

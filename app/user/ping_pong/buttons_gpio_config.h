@@ -1,0 +1,18 @@
+#ifndef BUTTONS_GPIO_CONFIG_H
+#define BUTTONS_GPIO_CONFIG_H
+
+#include "mik32_memory_map.h"
+
+#define BUTTON_DOWN_PLAYER_1_PIN   (0) // D12 ACE-UNO
+#define BUTTON_UP_PLAYER_1_PIN     (1) // D11 ACE-UNO
+#define BUTTON_DOWN_PLAYER_2_PIN   (2) // D13 ACE-UNO
+#define BUTTON_UP_PLAYER_2_PIN     (3) // D10 ACE-UNO
+
+#define BUTTON_DOWN_PLAYER_1_PORT  GPIO_1
+#define BUTTON_UP_PLAYER_1_PORT    GPIO_1
+#define BUTTON_DOWN_PLAYER_2_PORT  GPIO_1
+#define BUTTON_UP_PLAYER_2_PORT    GPIO_1
+
+void Buttons_GPIO_Pins_Init();
+
+#endif

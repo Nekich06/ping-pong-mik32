@@ -2,6 +2,7 @@
 #include "scr1_timer_delay.h"
 #include "ssd1306_spi.h"
 #include "ssd1306_gfx.h"
+#include "ping_pong.h"
 
 static void USART_Init();
 static void SystemClock_Config(void);
@@ -13,20 +14,12 @@ int main()
   SystemClock_Config();
   USART_Init();
 
-  SCR1_Timer_Delay(3000000);
-
   SSD1306_Begin(SSD1306_SWITCHCAPVCC, true);
   SSD1306_ClearDisplay();
-  SSD1306_Display();
 
-  SSD1306_DefaultCursorInit();
   while (1)
   {
-    SSD1306_SetCursor(12, 10);
-    SSD1306_SetTextSize(2);
-    SSD1306_WriteText("Hello, world!", 14);
-    SSD1306_Display();
-    SCR1_Timer_Delay(3000000);
+    pingpong();
   }
 }
 
