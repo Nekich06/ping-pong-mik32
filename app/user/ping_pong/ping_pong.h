@@ -55,10 +55,10 @@ void showGameOver(void);
 void incScorePlayer_1();
 void incScorePlayer_2();
 
-void changeOrbPosition(Orb * orb);
-bool changeOrbDirIfCollisions(Orb * orb, Player * player_1, Player * player_2);
-void changePlayersPosIfButtonsPressed(Player * player_1, Player * player_2);
-void changePlayerPosIfButtonPressedAndManageRobot(Player * player, Robot * robot);
+void changeOrbPosition(Orb * orb) __attribute__((section(".ram_text")));
+bool changeOrbDirIfCollisions(Orb * orb, Player * player_1, Player * player_2) __attribute__((section(".ram_text")));
+void changePlayersPosIfButtonsPressed(Player * player_1, Player * player_2) __attribute__((section(".ram_text")));
+void changePlayerPosIfButtonPressedAndManageRobot(Player * player, Robot * robot) __attribute__((section(".ram_text")));
 
 void pingpong(void);
 

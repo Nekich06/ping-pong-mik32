@@ -11,8 +11,8 @@
 
 uint8_t display_buffer[DISPLAY_BUF_SIZE];
 
-static void SSD1306_SendCommands(uint8_t * commands, uint8_t size);
-static void SSD1306_SendData(uint8_t * data, uint16_t size);
+static void SSD1306_SendCommands(uint8_t * commands, uint8_t size) __attribute__((section(".ram_text")));
+static void SSD1306_SendData(uint8_t * data, uint16_t size) __attribute__((section(".ram_text")));
 
 void SSD1306_Begin(uint8_t vcs, bool reset)
 {

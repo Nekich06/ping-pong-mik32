@@ -56,10 +56,10 @@
 #define SSD1306_INVERSE 2
 
 void SSD1306_Begin(uint8_t vcs, bool reset);
-void SSD1306_ClearDisplay(void);
-void SSD1306_Display(void);
-void SSD1306_DrawPixelInternal(int16_t x, int16_t y, uint16_t color);
-void SSD1306_DrawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
-void SSD1306_DrawFastVLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
+void SSD1306_ClearDisplay(void) __attribute__((section(".ram_text")));
+void SSD1306_Display(void) __attribute__((section(".ram_text")));
+void SSD1306_DrawPixelInternal(int16_t x, int16_t y, uint16_t color) __attribute__((section(".ram_text")));
+void SSD1306_DrawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) __attribute__((section(".ram_text")));
+void SSD1306_DrawFastVLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) __attribute__((section(".ram_text")));
 
 #endif
