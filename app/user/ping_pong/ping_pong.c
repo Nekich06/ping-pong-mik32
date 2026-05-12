@@ -6,11 +6,10 @@
 #include "buttons_gpio_config.h"
 #include "mik32_hal_gpio.h"
 #include "ssd1306_gfx.h"
+#include "sound.h"
 
 #define ORB_SPEED_RAND() (ORB_SPEED_MIN + rand() % (ORB_SPEED_MAX - ORB_SPEED_MIN + 1))
 #define DIRECTION_RAND() (0 + rand() % (2 - 0 + 1))
-
-static void resetCounter();
 
 static struct Gameplay
 {
@@ -24,6 +23,8 @@ static struct Gameplay
     char score_buf[3];
   } counter;
 } gameplay;
+
+static void resetCounter();
 
 Player createPlayer(int8_t x_pos, int8_t y_pos)
 {
@@ -210,22 +211,26 @@ bool changeOrbDirIfCollisions(Orb * orb, Player * player_1, Player * player_2)
 
     if (orb->y <= 0)
     {
+      doCollisionSound();
       orb->y_direction = true;
       orb->y_speed = ORB_SPEED_RAND();
     }
     else if (orb->y >= (SSD1306_HEIGHT - ORB_RADIUS))
     {
+      doCollisionSound();
       orb->y_direction = false;
       orb->y_speed = ORB_SPEED_RAND();
     }
 
     if ( (orb->y <= (player_1->y + PLATFORM_HEIGHT)) && (orb->y >= player_1->y) && (orb->x <= (player_1->x + PLATFORM_WIDTH + ORB_RADIUS)) )
     {
+      doCollisionSound();
       orb->x_direction = true;
       orb->x_speed = ORB_SPEED_RAND();
     }
     else if ( (orb->y <= (player_2->y + PLATFORM_HEIGHT)) && (orb->y >= player_2->y) && (orb->x >= (player_2->x - ORB_RADIUS)) )
     {
+      doCollisionSound();
       orb->x_direction = false;
       orb->x_speed = ORB_SPEED_RAND();
     }
@@ -295,8 +300,10 @@ void pingpong(void)
 {
   Buttons_GPIO_Pins_Init();
   SSD1306_ClearDisplay();
+  soundInit();
   for (;;)
   {
+    // tone(500);
     showMenu();
 
     if (gameplay.player_vs_player_mode)
