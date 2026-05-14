@@ -1,5 +1,6 @@
 #include "sound.h"
 
+#include <stddef.h>
 #include <stdbool.h>
 
 #include "epic.h"
@@ -18,30 +19,18 @@
 #define PWM_PERIOD_TICKS(freq) (SYSTEM_FREQ_HZ / (freq))
 #define PWM_DUTY_CYCLE_TICKS(freq) ((PWM_PERIOD_TICKS(freq) / 100) * MEANDER_PERCENT)
 
-static uint32_t collisionSoundFreqs[] =
-{
-  300, 285, 270, 255, 240, 225, 210, 195,
-  180, 165, 150, 135, 120, 105, 90, 0, 120, 0
-};
-
-static uint32_t collisionSoundDurationsMs[] =
-{
-  3, 3, 3, 3, 3, 3, 3, 3, 3,
-  3, 3, 3, 3, 3, 3, 10, 60, 0
-};
-
-static struct SoundManager
-{
-  uint32_t * freqs;
-  uint32_t * durationsMs;
-  uint8_t iteration;
-  bool processing;
-} sndManager;
-
 static void Timer32_1_Init(void);
 static void Timer32_2_PWM_Init(void);
 
 static void EPIC_trap_handler();
+
+SoundManager sndManager =
+{
+  .freqs = NULL,
+  .durationsMs = NULL,
+  .iteration = 0,
+  .processing = false
+};
 
 void soundInit(void)
 {
@@ -78,21 +67,6 @@ void noTone(void)
   TIMER32_2->TOP = 0xFFFFFFFF;
   TIMER32_2->CHANNELS[3].OCR = 0;
   TIMER32_2->ENABLE = 0;
-}
-
-void doCollisionSound()
-{
-  sndManager.freqs = collisionSoundFreqs;
-  sndManager.durationsMs = collisionSoundDurationsMs;
-  sndManager.iteration = 0;
-
-  if (!sndManager.processing)
-  {
-    toneMs(sndManager.freqs[sndManager.iteration],
-       sndManager.durationsMs[sndManager.iteration]);
-    ++sndManager.iteration;
-    sndManager.processing = true;
-  }
 }
 
 void Timer32_1_Init(void)

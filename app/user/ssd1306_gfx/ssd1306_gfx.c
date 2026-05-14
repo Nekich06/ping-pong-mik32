@@ -1,4 +1,7 @@
 #include "ssd1306_gfx.h"
+
+#include <stddef.h>
+
 #include "font.h"
 
 static struct TextCursor

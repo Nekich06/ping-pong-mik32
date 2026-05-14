@@ -1,7 +1,8 @@
 #ifndef SPI_FUNCTIONS_H
 #define SPI_FUNCTIONS_H
 
-#include "mik32_hal_spi.h"
+#include <stddef.h>
+
 #include "mik32_hal_gpio.h"
 
 void SPI_Init(void);

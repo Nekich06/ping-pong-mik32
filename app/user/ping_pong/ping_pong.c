@@ -3,13 +3,49 @@
 #include <stdlib.h>
 
 #include "scr1_timer_delay.h"
-#include "buttons_gpio_config.h"
+#include "ping_pong_buttons.h"
+#include "ping_pong_sound.h"
 #include "mik32_hal_gpio.h"
 #include "ssd1306_gfx.h"
-#include "sound.h"
+
+#define PLATFORM_WIDTH      (SSD1306_WIDTH / 32)
+#define PLATFORM_HEIGHT     (SSD1306_HEIGHT / 4)
+#define PLAYER_1_START_XPOS (0)
+#define PLAYER_1_START_YPOS (24)
+#define PLAYER_2_START_XPOS (124)
+#define PLAYER_2_START_YPOS (24)
+#define PLAYER_SPEED        (2)
+
+#define ORB_START_XPOS (64)
+#define ORB_START_YPOS (32)
+#define ORB_RADIUS     (2)
+#define ORB_SPEED_MIN  (1)
+#define ORB_SPEED_MAX  (2)
 
 #define ORB_SPEED_RAND() (ORB_SPEED_MIN + rand() % (ORB_SPEED_MAX - ORB_SPEED_MIN + 1))
 #define DIRECTION_RAND() (0 + rand() % (2 - 0 + 1))
+
+typedef struct _Player
+{
+  int8_t x;
+  int8_t y;
+} Player;
+
+typedef struct _Robot
+{
+  Player coordinates;
+  bool direction;
+} Robot;
+
+typedef struct _Orb
+{
+  int8_t x;
+  int8_t y;
+  int8_t x_speed;
+  int8_t y_speed;
+  bool x_direction;
+  bool y_direction;
+} Orb;
 
 static struct Gameplay
 {
@@ -24,7 +60,111 @@ static struct Gameplay
   } counter;
 } gameplay;
 
+static Player createPlayer(int8_t x_pos, int8_t y_pos);
+static Robot createRobot(int8_t x_pos, int8_t y_pos, bool direction);
+static Orb createOrb(int8_t x_pos, int8_t y_pos, int8_t x_speed, int8_t y_speed, bool x_dir, bool y_dir);
+
+static void drawOrb(Orb * orb);
+static void drawPlatform(Player * player);
+
+static void showMenu(void);
+static void chooseModeMode(void);
+static void initGraphics(void);
+static void showGameOver(void);
+static void incScorePlayer_1();
+static void incScorePlayer_2();
 static void resetCounter();
+
+static void changeOrbPosition(Orb * orb) __attribute__((section(".ram_text")));
+static bool changeOrbDirIfCollisions(Orb * orb, Player * player_1, Player * player_2) __attribute__((section(".ram_text")));
+static void changePlayersPosIfButtonsPressed(Player * player_1, Player * player_2) __attribute__((section(".ram_text")));
+static void changePlayerPosIfButtonPressedAndManageRobot(Player * player, Robot * robot) __attribute__((section(".ram_text")));
+
+void pingpong(void)
+{
+  SSD1306_ClearDisplay();
+  for (;;)
+  {
+    showMenu();
+
+    if (gameplay.player_vs_player_mode)
+    {
+      for (;;)
+      {
+        if (gameplay.is_game_over)
+        {
+          gameplay.is_game_over = false;
+          resetCounter();
+          showGameOver();
+          SSD1306_ClearDisplay();
+          break;
+        }
+        Player player_1 = createPlayer(PLAYER_1_START_XPOS, PLAYER_1_START_YPOS);
+        Player player_2 = createPlayer(PLAYER_2_START_XPOS, PLAYER_2_START_YPOS);
+
+        Orb orb = createOrb(ORB_START_XPOS, ORB_START_YPOS, ORB_SPEED_RAND(), ORB_SPEED_RAND(), DIRECTION_RAND(), DIRECTION_RAND());
+
+        initGraphics();
+        SSD1306_Display();
+        SCR1_Timer_Delay(1500000);
+        for (;;)
+        {
+          SSD1306_ClearDisplay();
+          changeOrbPosition(&orb);
+          if (changeOrbDirIfCollisions(&orb, &player_1, &player_2))
+          {
+            SCR1_Timer_Delay(1500000);
+            break;
+          }
+          changePlayersPosIfButtonsPressed(&player_1, &player_2);
+
+          drawPlatform(&player_1);
+          drawPlatform(&player_2);
+          drawOrb(&orb);
+          SSD1306_Display();
+        }
+      }
+    }
+    else
+    {
+      for (;;)
+      {
+        if (gameplay.is_game_over)
+        {
+          gameplay.is_game_over = false;
+          resetCounter();
+          showGameOver();
+          SSD1306_ClearDisplay();
+          break;
+        }
+        Player player_1 = createPlayer(PLAYER_1_START_XPOS, PLAYER_1_START_YPOS);
+        Robot robot = createRobot(PLAYER_2_START_XPOS, PLAYER_2_START_YPOS, DIRECTION_RAND());
+
+        Orb orb = createOrb(ORB_START_XPOS, ORB_START_YPOS, ORB_SPEED_RAND(), ORB_SPEED_RAND(), DIRECTION_RAND(), DIRECTION_RAND());
+
+        initGraphics();
+        SSD1306_Display();
+        SCR1_Timer_Delay(1500000);
+        for (;;)
+        {
+          SSD1306_ClearDisplay();
+          changeOrbPosition(&orb);
+          if (changeOrbDirIfCollisions(&orb, &player_1, &robot.coordinates))
+          {
+            SCR1_Timer_Delay(1500000);
+            break;
+          }
+          changePlayerPosIfButtonPressedAndManageRobot(&player_1, &robot);
+
+          drawPlatform(&player_1);
+          drawPlatform(&robot.coordinates);
+          drawOrb(&orb);
+          SSD1306_Display();
+        }
+      }
+    }
+  }
+}
 
 Player createPlayer(int8_t x_pos, int8_t y_pos)
 {
@@ -177,6 +317,12 @@ void incScorePlayer_2()
   }
 }
 
+void resetCounter()
+{
+  gameplay.counter.player_1_score = 0;
+  gameplay.counter.player_2_score = 0;
+}
+
 void changeOrbPosition(Orb * orb)
 {
   if (orb->x_direction)
@@ -296,99 +442,4 @@ void changePlayerPosIfButtonPressedAndManageRobot(Player * player, Robot * robot
       robot->direction = false;
     }
   }
-}
-
-void pingpong(void)
-{
-  Buttons_GPIO_Pins_Init();
-  SSD1306_ClearDisplay();
-  soundInit();
-  for (;;)
-  {
-    // tone(500);
-    showMenu();
-
-    if (gameplay.player_vs_player_mode)
-    {
-      for (;;)
-      {
-        if (gameplay.is_game_over)
-        {
-          gameplay.is_game_over = false;
-          resetCounter();
-          showGameOver();
-          SSD1306_ClearDisplay();
-          break;
-        }
-        Player player_1 = createPlayer(PLAYER_1_START_XPOS, PLAYER_1_START_YPOS);
-        Player player_2 = createPlayer(PLAYER_2_START_XPOS, PLAYER_2_START_YPOS);
-
-        Orb orb = createOrb(ORB_START_XPOS, ORB_START_YPOS, ORB_SPEED_RAND(), ORB_SPEED_RAND(), DIRECTION_RAND(), DIRECTION_RAND());
-
-        initGraphics();
-        SSD1306_Display();
-        SCR1_Timer_Delay(1500000);
-        for (;;)
-        {
-          SSD1306_ClearDisplay();
-          changeOrbPosition(&orb);
-          if (changeOrbDirIfCollisions(&orb, &player_1, &player_2))
-          {
-            SCR1_Timer_Delay(1500000);
-            break;
-          }
-          changePlayersPosIfButtonsPressed(&player_1, &player_2);
-
-          drawPlatform(&player_1);
-          drawPlatform(&player_2);
-          drawOrb(&orb);
-          SSD1306_Display();
-        }
-      }
-    }
-    else
-    {
-      for (;;)
-      {
-        if (gameplay.is_game_over)
-        {
-          gameplay.is_game_over = false;
-          resetCounter();
-          showGameOver();
-          SSD1306_ClearDisplay();
-          break;
-        }
-        Player player_1 = createPlayer(PLAYER_1_START_XPOS, PLAYER_1_START_YPOS);
-        Robot robot = createRobot(PLAYER_2_START_XPOS, PLAYER_2_START_YPOS, DIRECTION_RAND());
-
-        Orb orb = createOrb(ORB_START_XPOS, ORB_START_YPOS, ORB_SPEED_RAND(), ORB_SPEED_RAND(), DIRECTION_RAND(), DIRECTION_RAND());
-
-        initGraphics();
-        SSD1306_Display();
-        SCR1_Timer_Delay(1500000);
-        for (;;)
-        {
-          SSD1306_ClearDisplay();
-          changeOrbPosition(&orb);
-          if (changeOrbDirIfCollisions(&orb, &player_1, &robot.coordinates))
-          {
-            SCR1_Timer_Delay(1500000);
-            break;
-          }
-          changePlayerPosIfButtonPressedAndManageRobot(&player_1, &robot);
-
-          drawPlatform(&player_1);
-          drawPlatform(&robot.coordinates);
-          drawOrb(&orb);
-          SSD1306_Display();
-        }
-      }
-    }
-  }
-}
-
-void resetCounter()
-{
-  gameplay.counter.player_1_score = 0;
-  gameplay.counter.player_2_score = 0;
 }

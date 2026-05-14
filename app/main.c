@@ -1,9 +1,10 @@
 #include "mik32_hal_usart.h"
-#include "scr1_timer_delay.h"
+#include "buttons_gpio_config.h"
 #include "ssd1306_spi.h"
-#include "ssd1306_gfx.h"
 #include "ping_pong.h"
+#include "sound.h"
 
+static void GPIO_Init();
 static void USART_Init();
 static void SystemClock_Config(void);
 
@@ -13,9 +14,11 @@ int main()
 {
   SystemClock_Config();
   USART_Init();
+  GPIO_Init();
 
+  Buttons_GPIO_Pins_Init();
+  soundInit();
   SSD1306_Begin(SSD1306_SWITCHCAPVCC, true);
-  SSD1306_ClearDisplay();
 
   while (1)
   {
@@ -84,3 +87,10 @@ void USART_Init()
   HAL_USART_Init(&husart0);
 }
 
+void GPIO_Init()
+{
+  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_0_M;
+  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_1_M;
+  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_2_M;
+  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_IRQ_M;
+}

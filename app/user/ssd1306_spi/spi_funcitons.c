@@ -1,7 +1,7 @@
 #include "spi_functions.h"
 
 #include "ssd1306_gpio_config.h"
-#include "mik32_memory_map.h"
+#include "mik32_hal_spi.h"
 
 static SPI_HandleTypeDef hspi;
 

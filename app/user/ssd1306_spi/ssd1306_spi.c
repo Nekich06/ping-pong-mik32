@@ -9,7 +9,7 @@
 #define SSD1306_SWAP(a, b) (((a) ^= (b)), ((b) ^= (a)), ((a) ^= (b)))
 #define DISPLAY_BUF_SIZE ((SSD1306_WIDTH * ((SSD1306_HEIGHT + 7) / 8)))
 
-uint8_t display_buffer[DISPLAY_BUF_SIZE];
+static uint8_t display_buffer[DISPLAY_BUF_SIZE];
 
 static void SSD1306_SendCommands(uint8_t * commands, uint8_t size) __attribute__((section(".ram_text")));
 static void SSD1306_SendData(uint8_t * data, uint16_t size) __attribute__((section(".ram_text")));

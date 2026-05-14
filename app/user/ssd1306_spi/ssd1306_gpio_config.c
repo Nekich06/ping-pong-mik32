@@ -1,17 +1,11 @@
 #include "ssd1306_gpio_config.h"
 
 #include "mik32_hal_gpio.h"
-#include "power_manager.h"
 #include "pad_config.h"
 #include "gpio.h"
 
 void SSD1306_GPIO_Pins_Init()
 {
-  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_0_M;
-  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_1_M;
-  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_2_M;
-  PM->CLK_APB_P_SET = PM_CLOCK_APB_P_GPIO_IRQ_M;
-
   PAD_CONFIG->PORT_0_CFG |= 0b01 << (D0_PIN * 2);
   PAD_CONFIG->PORT_0_DS |= 0 << (D0_PIN * 2);
   PAD_CONFIG->PORT_0_PUPD |= 0 << (D0_PIN * 2);
