@@ -1,5 +1,7 @@
 #include "sound.h"
 
+#include <stdbool.h>
+
 #include "epic.h"
 #include "timer32.h"
 #include "riscv-irq.h"
@@ -33,6 +35,7 @@ static struct SoundManager
   uint32_t * freqs;
   uint32_t * durationsMs;
   uint8_t iteration;
+  bool processing;
 } sndManager;
 
 static void Timer32_1_Init(void);
@@ -83,9 +86,13 @@ void doCollisionSound()
   sndManager.durationsMs = collisionSoundDurationsMs;
   sndManager.iteration = 0;
 
-  toneMs(sndManager.freqs[sndManager.iteration],
+  if (!sndManager.processing)
+  {
+    toneMs(sndManager.freqs[sndManager.iteration],
        sndManager.durationsMs[sndManager.iteration]);
-  ++sndManager.iteration;
+    ++sndManager.iteration;
+    sndManager.processing = true;
+  }
 }
 
 void Timer32_1_Init(void)
@@ -128,6 +135,7 @@ void EPIC_trap_handler()
     {
       noTone();
       TIMER32_1->ENABLE = 0;
+      sndManager.processing = false;
     }
 
     TIMER32_1->INT_CLEAR = TIMER32_INT_OVERFLOW_M;

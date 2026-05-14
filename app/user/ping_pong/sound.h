@@ -5,10 +5,10 @@
 
 void soundInit(void);
 
-void tone(uint32_t freq);
-void toneMs(uint32_t freq, uint32_t duration);
-void noTone(void);
+void tone(uint32_t freq) __attribute__((section(".ram_text")));
+void toneMs(uint32_t freq, uint32_t duration) __attribute__((section(".ram_text")));
+void noTone(void) __attribute__((section(".ram_text")));
 
-void doCollisionSound(void);
+void doCollisionSound(void) __attribute__((section(".ram_text")));
 
 #endif

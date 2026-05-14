@@ -131,9 +131,9 @@ void initGraphics(void)
 void showGameOver(void)
 {
   SSD1306_SetTextSize(2);
-  SSD1306_SetCursor(12, 20);
   if (gameplay.player_1_won)
   {
+    SSD1306_SetCursor(14, 20);
     SSD1306_WriteText("PLAYER 1");
     SSD1306_SetCursor(43, 36);
     SSD1306_WriteText("WON");
@@ -142,12 +142,14 @@ void showGameOver(void)
   {
     if (gameplay.player_vs_player_mode)
     {
+      SSD1306_SetCursor(14, 20);
       SSD1306_WriteText("PLAYER 2");
       SSD1306_SetCursor(43, 36);
       SSD1306_WriteText("WON");
     }
     else
     {
+      SSD1306_SetCursor(12, 20);
       SSD1306_WriteText("  ROBOT");
       SSD1306_SetCursor(48, 36);
       SSD1306_WriteText("WON");
