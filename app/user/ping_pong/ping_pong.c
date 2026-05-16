@@ -7,6 +7,7 @@
 #include "ping_pong_sound.h"
 #include "mik32_hal_gpio.h"
 #include "ssd1306_gfx.h"
+#include "sound.h"
 
 #define PLATFORM_WIDTH      (SSD1306_WIDTH / 32)
 #define PLATFORM_HEIGHT     (SSD1306_HEIGHT / 4)
@@ -211,6 +212,7 @@ void showMenu(void)
 void chooseModeMode(void)
 {
   bool player_vs_player_mode = true;
+  toneMs(500, 15000);
   while (1)
   {
     if (HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_1_PORT, 1 << BUTTON_DOWN_PLAYER_1_PIN) == GPIO_PIN_HIGH)
@@ -254,6 +256,7 @@ void chooseModeMode(void)
       }
     }
   }
+  noTone();
 }
 
 void initGraphics(void)

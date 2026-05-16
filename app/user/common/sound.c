@@ -22,7 +22,7 @@
 static void Timer32_1_Init(void);
 static void Timer32_2_PWM_Init(void);
 
-static void EPIC_trap_handler();
+static void EPIC_trap_handler() __attribute__((section(".ram_text")));
 
 SoundManager sndManager =
 {
@@ -48,25 +48,28 @@ void tone(uint32_t freq)
 {
   TIMER32_2->TOP = PWM_PERIOD_TICKS(freq);
   TIMER32_2->CHANNELS[3].OCR = PWM_DUTY_CYCLE_TICKS(freq);
-  TIMER32_2->ENABLE = 1;
+  TIMER32_2->ENABLE = 3;
 }
 
 void toneMs(uint32_t freq, uint32_t duration)
 {
   TIMER32_2->TOP = PWM_PERIOD_TICKS(freq);
   TIMER32_2->CHANNELS[3].OCR = PWM_DUTY_CYCLE_TICKS(freq);
-  TIMER32_2->ENABLE = 1;
+  TIMER32_2->ENABLE = 3;
 
   TIMER32_1->TOP = (SYSTEM_FREQ_HZ * (duration / 1000.0));
-  TIMER32_1->ENABLE = 1;
+  TIMER32_1->ENABLE = 3;
   TIMER32_1->INT_MASK = TIMER32_INT_OVERFLOW_M;
 }
 
 void noTone(void)
 {
-  TIMER32_2->TOP = 0xFFFFFFFF;
-  TIMER32_2->CHANNELS[3].OCR = 0;
   TIMER32_2->ENABLE = 0;
+  TIMER32_2->TOP = 0xFFFFFFFF;
+  TIMER32_1->INT_MASK = 0;
+  TIMER32_1->INT_CLEAR = TIMER32_INT_OVERFLOW_M;
+  TIMER32_1->ENABLE = 0;
+  TIMER32_1->TOP = 0xFFFFFFFF;
 }
 
 void Timer32_1_Init(void)
@@ -92,27 +95,28 @@ void Timer32_2_PWM_Init(void)
   TIMER32_2->INT_CLEAR = 0xFFFFFFFF;
   TIMER32_2->CHANNELS[3].CNTRL =
     TIMER32_CH_CNTRL_MODE_PWM_M | TIMER32_CH_CNTRL_ENABLE_M;
-  TIMER32_2->ENABLE = 1;
 }
 
 void EPIC_trap_handler()
 {
   if (TIMER32_1->INT_MASK & TIMER32_INT_OVERFLOW_M)
   {
-    if (sndManager.durationsMs[sndManager.iteration])
+    noTone();
+
+    if (sndManager.processing)
     {
-      toneMs(sndManager.freqs[sndManager.iteration],
-           sndManager.durationsMs[sndManager.iteration]);
-      ++sndManager.iteration;
-    }
-    else
-    {
-      noTone();
-      TIMER32_1->ENABLE = 0;
-      sndManager.processing = false;
+      if (sndManager.durationsMs[sndManager.iteration])
+      {
+        toneMs(sndManager.freqs[sndManager.iteration], sndManager.durationsMs[sndManager.iteration]);
+        ++sndManager.iteration;
+        TIMER32_1->INT_MASK = TIMER32_INT_OVERFLOW_M;
+      }
+      else
+      {
+        sndManager.processing = false;
+      }
     }
 
-    TIMER32_1->INT_CLEAR = TIMER32_INT_OVERFLOW_M;
     EPIC->CLEAR |= EPIC_LINE_TIMER32_1_S;
   }
 }
