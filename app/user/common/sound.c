@@ -24,6 +24,8 @@ static void Timer32_2_PWM_Init(void);
 
 static void EPIC_trap_handler() __attribute__((section(".ram_text")));
 
+static void resetSoundManager();
+
 SoundManager sndManager =
 {
   .freqs = NULL,
@@ -64,6 +66,7 @@ void toneMs(uint32_t freq, uint32_t duration)
 
 void noTone(void)
 {
+  resetSoundManager();
   TIMER32_2->ENABLE = 0;
   TIMER32_2->TOP = 0xFFFFFFFF;
   TIMER32_1->INT_MASK = 0;
@@ -101,7 +104,12 @@ void EPIC_trap_handler()
 {
   if (TIMER32_1->INT_MASK & TIMER32_INT_OVERFLOW_M)
   {
-    noTone();
+    TIMER32_2->ENABLE = 0;
+    TIMER32_2->TOP = 0xFFFFFFFF;
+    TIMER32_1->INT_MASK = 0;
+    TIMER32_1->INT_CLEAR = TIMER32_INT_OVERFLOW_M;
+    TIMER32_1->ENABLE = 0;
+    TIMER32_1->TOP = 0xFFFFFFFF;
 
     if (sndManager.processing)
     {
@@ -119,4 +127,12 @@ void EPIC_trap_handler()
 
     EPIC->CLEAR |= EPIC_LINE_TIMER32_1_S;
   }
+}
+
+void resetSoundManager()
+{
+  sndManager.freqs = NULL;
+  sndManager.durationsMs = NULL;
+  sndManager.iteration = 0;
+  sndManager.processing = false;
 }

@@ -212,9 +212,9 @@ void showMenu(void)
 void chooseModeMode(void)
 {
   bool player_vs_player_mode = true;
-  toneMs(500, 15000);
   while (1)
   {
+    playMenuMusic();
     if (HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_1_PORT, 1 << BUTTON_DOWN_PLAYER_1_PIN) == GPIO_PIN_HIGH)
     {
       SSD1306_ClearDisplay();
