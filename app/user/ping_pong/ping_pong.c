@@ -50,7 +50,20 @@ typedef struct _Orb
 
 static struct Gameplay
 {
-  bool player_vs_player_mode;
+  enum Mode
+  {
+    PLAYER_VS_PLAYER,
+    PLAYER_VS_ROBOT,
+    SETTINGS
+  } mode;
+  enum Settings
+  {
+    MAX_SCORE,
+    MUSIC,
+    GO_BACK
+  } settings;
+  enum Music music;
+  uint8_t max_score;
   bool is_game_over;
   bool player_1_won;
   struct Counter
@@ -61,6 +74,7 @@ static struct Gameplay
   } counter;
 } gameplay;
 
+
 static Player createPlayer(int8_t x_pos, int8_t y_pos);
 static Robot createRobot(int8_t x_pos, int8_t y_pos, bool direction);
 static Orb createOrb(int8_t x_pos, int8_t y_pos, int8_t x_speed, int8_t y_speed, bool x_dir, bool y_dir);
@@ -68,8 +82,11 @@ static Orb createOrb(int8_t x_pos, int8_t y_pos, int8_t x_speed, int8_t y_speed,
 static void drawOrb(Orb * orb);
 static void drawPlatform(Player * player);
 
-static void showMenu(void);
-static void chooseModeMode(void);
+static void showMenu(void) __attribute__((section(".ram_text")));
+static void chooseMode(void);
+static void showSettings(void);
+static void settingsMode(void);
+static void initGameplay(void);
 static void initGraphics(void);
 static void showGameOver(void);
 static void incScorePlayer_1();
@@ -84,11 +101,13 @@ static void changePlayerPosIfButtonPressedAndManageRobot(Player * player, Robot 
 void pingpong(void)
 {
   SSD1306_ClearDisplay();
+  initGameplay();
   for (;;)
   {
-    showMenu();
+    gameplay.mode = PLAYER_VS_PLAYER;
+    chooseMode();
 
-    if (gameplay.player_vs_player_mode)
+    if (gameplay.mode == PLAYER_VS_PLAYER)
     {
       for (;;)
       {
@@ -196,67 +215,243 @@ void showMenu(void)
 {
   SSD1306_SetTextColor(SSD1306_WHITE);
   SSD1306_SetTextSize(2);
-  SSD1306_SetCursor(10, 16);
+  SSD1306_SetCursor(10, 10);
   SSD1306_WriteText("PING-PONG");
+  SSD1306_FillCircle(87, 15, 1, SSD1306_WHITE);
   SSD1306_SetTextSize(1);
-  SSD1306_SetCursor(10, 34);
-  SSD1306_WriteText("> PLAYER VS PLAYER");
-  SSD1306_SetCursor(10, 44);
-  SSD1306_WriteText("  PLAYER VS ROBOT");
-  SSD1306_Display();
+  SSD1306_SetCursor(10, 30);
+  switch (gameplay.mode)
+  {
+    case (PLAYER_VS_PLAYER):
 
-  chooseModeMode();
-  SSD1306_ClearDisplay();
+      SSD1306_WriteText("> PLAYER VS PLAYER");
+      SSD1306_SetCursor(10, 42);
+      SSD1306_WriteText("  PLAYER VS ROBOT");
+      SSD1306_SetCursor(10, 54);
+      SSD1306_WriteText("  SETTINGS");
+      break;
+
+    case (PLAYER_VS_ROBOT):
+
+      SSD1306_WriteText("  PLAYER VS PLAYER");
+      SSD1306_SetCursor(10, 42);
+      SSD1306_WriteText("> PLAYER VS ROBOT");
+      SSD1306_SetCursor(10, 54);
+      SSD1306_WriteText("  SETTINGS");
+      break;
+
+    case (SETTINGS):
+
+      SSD1306_WriteText("  PLAYER VS PLAYER");
+      SSD1306_SetCursor(10, 42);
+      SSD1306_WriteText("  PLAYER VS ROBOT");
+      SSD1306_SetCursor(10, 54);
+      SSD1306_WriteText("> SETTINGS");
+      break;
+  }
+  SSD1306_Display();
 }
 
-void chooseModeMode(void)
+void chooseMode(void)
 {
-  bool player_vs_player_mode = true;
+  showMenu();
   while (1)
   {
-    playMenuMusic();
+    playMenuMusic(gameplay.music);
     if (HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_1_PORT, 1 << BUTTON_DOWN_PLAYER_1_PIN) == GPIO_PIN_HIGH)
     {
-      SSD1306_ClearDisplay();
-      SSD1306_SetTextSize(2);
-      SSD1306_SetCursor(10, 16);
-      SSD1306_WriteText("PING-PONG");
-      SSD1306_SetTextSize(1);
-      SSD1306_SetCursor(10, 34);
+      switch (gameplay.mode)
+      {
+        case (PLAYER_VS_PLAYER):
 
-      if (player_vs_player_mode)
-      {
-        SSD1306_WriteText("  PLAYER VS PLAYER");
-        SSD1306_SetCursor(10, 44);
-        SSD1306_WriteText("> PLAYER VS ROBOT");
-        player_vs_player_mode = false;
+          gameplay.mode = PLAYER_VS_ROBOT;
+          break;
+
+        case (PLAYER_VS_ROBOT):
+
+          gameplay.mode = SETTINGS;
+          break;
+
+        case (SETTINGS):
+
+          gameplay.mode = PLAYER_VS_PLAYER;
+          break;
       }
-      else
-      {
-        SSD1306_WriteText("> PLAYER VS PLAYER");
-        SSD1306_SetCursor(10, 44);
-        SSD1306_WriteText("  PLAYER VS ROBOT");
-        player_vs_player_mode = true;
-      }
-      SSD1306_Display();
+
+      showMenu();
       SCR1_Timer_Delay(200000);
     }
 
     if (HAL_GPIO_ReadPin(BUTTON_UP_PLAYER_1_PORT, 1 << BUTTON_UP_PLAYER_1_PIN) == GPIO_PIN_HIGH)
     {
-      if (player_vs_player_mode)
+      if (gameplay.mode == SETTINGS)
       {
-        gameplay.player_vs_player_mode = true;
-        break;
+        noTone();
+        SSD1306_ClearDisplay();
+        settingsMode();
+        gameplay.mode = PLAYER_VS_PLAYER;
+        showMenu();
+        SCR1_Timer_Delay(200000);
       }
       else
       {
-        gameplay.player_vs_player_mode = false;
         break;
       }
     }
   }
+
   noTone();
+  SSD1306_ClearDisplay();
+}
+
+void showSettings(void)
+{
+  SSD1306_SetTextSize(2);
+  SSD1306_SetCursor(10, 10);
+  SSD1306_WriteText("SETTINGS");
+  SSD1306_SetTextSize(1);
+  SSD1306_SetCursor(10, 30);
+  switch (gameplay.settings)
+  {
+    case (MAX_SCORE):
+
+      SSD1306_WriteText("> MAX SCORE: ");
+      SSD1306_SetCursor(10, 42);
+      SSD1306_WriteText("  MUSIC: ");
+      SSD1306_SetCursor(10, 54);
+      SSD1306_WriteText("  GO BACK");
+      break;
+
+    case (MUSIC):
+
+      SSD1306_WriteText("  MAX SCORE: ");
+      SSD1306_SetCursor(10, 42);
+      SSD1306_WriteText("> MUSIC: ");
+      SSD1306_SetCursor(10, 54);
+      SSD1306_WriteText("  GO BACK");
+      break;
+
+    case (GO_BACK):
+
+      SSD1306_WriteText("  MAX SCORE: ");
+      SSD1306_SetCursor(10, 42);
+      SSD1306_WriteText("  MUSIC: ");
+      SSD1306_SetCursor(10, 54);
+      SSD1306_WriteText("< GO BACK");
+      break;
+  }
+
+  SSD1306_SetCursor(100, 30);
+  SSD1306_WriteText(itoa(gameplay.max_score, gameplay.counter.score_buf, 10));
+
+  SSD1306_SetCursor(90, 42);
+  switch (gameplay.music)
+  {
+    case (RETRO):
+
+      SSD1306_WriteText("RETRO");
+      break;
+
+    case (METAL):
+
+      SSD1306_WriteText("METAL");
+      break;
+
+    case (OFF):
+
+      SSD1306_WriteText(" OFF");
+      break;
+  }
+
+  SSD1306_Display();
+}
+
+void settingsMode(void)
+{
+  gameplay.settings = MAX_SCORE;
+  showSettings();
+  SCR1_Timer_Delay(200000);
+  while (1)
+  {
+    SSD1306_ClearDisplay();
+    if (HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_1_PORT, 1 << BUTTON_DOWN_PLAYER_1_PIN) == GPIO_PIN_HIGH)
+    {
+      switch (gameplay.settings)
+      {
+        case (MAX_SCORE):
+
+          gameplay.settings = MUSIC;
+          break;
+
+        case (MUSIC):
+
+          gameplay.settings = GO_BACK;
+          break;
+
+        case (GO_BACK):
+
+          gameplay.settings = MAX_SCORE;
+          break;
+      }
+
+      showSettings();
+      SCR1_Timer_Delay(200000);
+    }
+
+    if (HAL_GPIO_ReadPin(BUTTON_UP_PLAYER_1_PORT, 1 << BUTTON_UP_PLAYER_1_PIN) == GPIO_PIN_HIGH)
+    {
+      if (gameplay.settings == GO_BACK)
+      {
+        break;
+      }
+      else
+      {
+        switch (gameplay.settings)
+        {
+          case (MAX_SCORE):
+
+            if (gameplay.max_score != 10)
+            {
+              ++gameplay.max_score;
+            }
+            else
+            {
+              gameplay.max_score = 1;
+            }
+
+            break;
+
+          case (MUSIC):
+
+            if (gameplay.music == RETRO)
+            {
+              gameplay.music = METAL;
+            }
+            else if (gameplay.music == METAL)
+            {
+              gameplay.music = OFF;
+            }
+            else
+            {
+              gameplay.music = RETRO;
+            }
+
+            break;
+        }
+        showSettings();
+        SCR1_Timer_Delay(200000);
+      }
+    }
+  }
+
+  SSD1306_ClearDisplay();
+}
+
+void initGameplay(void)
+{
+  gameplay.max_score = 3;
+  gameplay.settings = MAX_SCORE;
+  gameplay.music = RETRO;
 }
 
 void initGraphics(void)
@@ -283,7 +478,7 @@ void showGameOver(void)
   }
   else
   {
-    if (gameplay.player_vs_player_mode)
+    if (gameplay.mode == PLAYER_VS_PLAYER)
     {
       SSD1306_SetCursor(14, 20);
       SSD1306_WriteText("PLAYER 2");
@@ -304,7 +499,7 @@ void showGameOver(void)
 
 void incScorePlayer_1()
 {
-  if (++gameplay.counter.player_1_score == 3)
+  if (++gameplay.counter.player_1_score == gameplay.max_score)
   {
     gameplay.is_game_over = true;
     gameplay.player_1_won = true;
@@ -313,7 +508,7 @@ void incScorePlayer_1()
 
 void incScorePlayer_2()
 {
-  if (++gameplay.counter.player_2_score == 3)
+  if (++gameplay.counter.player_2_score == gameplay.max_score)
   {
     gameplay.is_game_over = true;
     gameplay.player_1_won = false;
