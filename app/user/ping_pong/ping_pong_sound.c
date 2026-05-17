@@ -22,41 +22,75 @@ static const uint32_t metalMusicFreqs[] =
   // intro1
   NOTE_E3, 0, NOTE_D4, 0, NOTE_CS4, 0, NOTE_C4, 0,
   // intro2
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_E4, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_D4, 0, NOTE_CS4, 0, NOTE_C4, 0,
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E4, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_DS4, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_D4, 0, NOTE_CS4, 0, NOTE_C4, 0,
   // intro3
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_B3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_AS3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_A3, 0, NOTE_E3, 0, NOTE_GS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_E3, 0, NOTE_FS3, 0, NOTE_E3, 0,
-  // intro2 повтор
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_E4, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_D4, 0, NOTE_CS4, 0, NOTE_C4, 0,
-  // intro3 повтор
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_B3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_AS3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_A3, 0, NOTE_E3, 0, NOTE_GS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_E3, 0, NOTE_FS3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_B3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_AS3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_A3, 0, NOTE_E3, 0, NOTE_GS3, 0, NOTE_E3, 0,
+  NOTE_G3, 0, NOTE_E3, 0, NOTE_FS3, 0, NOTE_E3, 0,
+  // intro2
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E4, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_DS4, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_D4, 0, NOTE_CS4, 0, NOTE_C4, 0,
+  // intro3
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_B3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_AS3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_A3, 0, NOTE_E3, 0, NOTE_GS3, 0, NOTE_E3, 0,
+  NOTE_G3, 0, NOTE_E3, 0, NOTE_FS3, 0, NOTE_E3, 0,
   // preverse1
-  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_CS4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_B3, 0,
+  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0,
+  NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0,
+  NOTE_CS4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0,
+  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_B3, 0,
   // preverse2
-  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_CS4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, 0, 0,
-  // preverse1 повтор
-  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_CS4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_B3, 0,
+  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0,
+  NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0,
+  NOTE_CS4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0,
+  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, 0, 0,
+  // preverse1
+  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0,
+  NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0,
+  NOTE_CS4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0,
+  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_B3, 0,
   // preverse3
-  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0, NOTE_G3, 0, NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_FS3, 0,
+  NOTE_E3, 0, NOTE_F3, 0, NOTE_B3, 0, NOTE_E3, 0,
+  NOTE_F3, 0, NOTE_C4, 0, NOTE_E3, 0, NOTE_F3, 0,
+  NOTE_G3, 0, NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0,
+  NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_FS3, 0,
   // endIntro
-  NOTE_G3, 0, NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_FS3, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0,
+  NOTE_G3, 0, NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0,
+  NOTE_FS3, 0, NOTE_E3, 0, NOTE_G3, 0, NOTE_FS3, 0,
+  NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0, NOTE_E3, 0,
+  NOTE_DS4, 0, NOTE_A5, 0, NOTE_E3, 0, NOTE_DS4, 0,
+  NOTE_A5, 0, NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0,
+  NOTE_E3, 0, NOTE_DS4, 0, NOTE_A5, 0,
   // eightVampE
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
   // verse1
-  0, 0, NOTE_G3, 0, NOTE_A3, 0, 0, 0, NOTE_AS3, 0, NOTE_A3, 0, NOTE_G3, 0, NOTE_A3, 0,
-  // eightVampE повтор
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  0, 0, NOTE_G3, 0, NOTE_A3, 0, 0, 0, NOTE_AS3, 0,
+  NOTE_A3, 0, NOTE_G3, 0, NOTE_A3, 0,
+  // eightVampE
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
   // verse2
   NOTE_A3, 0, 0, 0, NOTE_A3, 0, 0, 0,
-  // eightVampE повтор
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
-  // verse1 повтор
-  0, 0, NOTE_G3, 0, NOTE_A3, 0, 0, 0, NOTE_AS3, 0, NOTE_A3, 0, NOTE_G3, 0, NOTE_A3, 0,
-  // eightVampE повтор
-  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
-  // verse2 повтор
+  // eightVampE
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  // verse1
+  0, 0, NOTE_G3, 0, NOTE_A3, 0, 0, 0, NOTE_AS3, 0,
+  NOTE_A3, 0, NOTE_G3, 0, NOTE_A3, 0,
+  // eightVampE
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0, NOTE_E3, 0,
+  // verse2
   NOTE_A3, 0, 0, 0, NOTE_A3, 0, 0, 0,
   // eightVampFSharp
-  NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, 0
+  NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0,
+  NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, NOTE_FS3, 0, 0
 };
 
 static const uint32_t metalMusicDurationMs[] =
@@ -64,41 +98,74 @@ static const uint32_t metalMusicDurationMs[] =
   // intro1
   125, 163, 250, 325, 125, 163, 500, 650,
   // intro2
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,125,163,125,163,250,325,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 125, 163, 125,
+  163, 250, 325,
   // intro3
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82,
   // intro2
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,125,163,125,163,250,325,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 125, 163, 125,
+  163, 250, 325,
   // intro3
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82,
   // preverse1
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82,
   // preverse2
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
-  // preverse1 повтор
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82,
+  // preverse1
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82,
   // preverse3
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82,
   // endIntro
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,250,325,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 250, 325,
   // eightVampE
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82,
   // verse1
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82,
   // eightVampE
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82,
   // verse2
-  63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82,
   // eightVampE
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82,
   // verse1
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82,
   // eightVampE
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 82,
   // verse2
-  63,82,63,82,63,82,63,82,
+  63, 82, 63, 82, 63, 82, 63, 82,
   // eightVampFSharp
-  63,82,63,82,63,82,63,82,63,82,63,82,63,82,63,83,0
+  63, 82, 63, 82, 63, 82, 63, 82, 63, 82,
+  63, 82, 63, 82, 63, 83, 0
 };
 
 static const uint32_t collisionSoundFreqs[] =
@@ -146,8 +213,6 @@ void playMenuMusic(enum Music music)
         noTone();
         break;
     }
-
-
   }
 }
 

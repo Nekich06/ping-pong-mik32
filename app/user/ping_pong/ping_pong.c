@@ -86,7 +86,6 @@ static void showMenu(void) __attribute__((section(".ram_text")));
 static void chooseMode(void);
 static void showSettings(void);
 static void settingsMode(void);
-static void initGameplay(void);
 static void initGraphics(void);
 static void showGameOver(void);
 static void incScorePlayer_1();
@@ -100,12 +99,14 @@ static void changePlayerPosIfButtonPressedAndManageRobot(Player * player, Robot 
 
 void pingpong(void)
 {
-  SSD1306_ClearDisplay();
-  initGameplay();
+  gameplay.max_score = 3;
+  gameplay.music = RETRO;
+
   for (;;)
   {
     gameplay.mode = PLAYER_VS_PLAYER;
     chooseMode();
+    SSD1306_ClearDisplay();
 
     if (gameplay.mode == PLAYER_VS_PLAYER)
     {
@@ -116,7 +117,6 @@ void pingpong(void)
           gameplay.is_game_over = false;
           resetCounter();
           showGameOver();
-          SSD1306_ClearDisplay();
           break;
         }
         Player player_1 = createPlayer(PLAYER_1_START_XPOS, PLAYER_1_START_YPOS);
@@ -154,7 +154,6 @@ void pingpong(void)
           gameplay.is_game_over = false;
           resetCounter();
           showGameOver();
-          SSD1306_ClearDisplay();
           break;
         }
         Player player_1 = createPlayer(PLAYER_1_START_XPOS, PLAYER_1_START_YPOS);
@@ -213,6 +212,8 @@ void drawPlatform(Player * player)
 
 void showMenu(void)
 {
+  SSD1306_ClearDisplay();
+
   SSD1306_SetTextColor(SSD1306_WHITE);
   SSD1306_SetTextSize(2);
   SSD1306_SetCursor(10, 10);
@@ -249,12 +250,14 @@ void showMenu(void)
       SSD1306_WriteText("> SETTINGS");
       break;
   }
+
   SSD1306_Display();
 }
 
 void chooseMode(void)
 {
   showMenu();
+
   while (1)
   {
     playMenuMusic(gameplay.music);
@@ -287,7 +290,6 @@ void chooseMode(void)
       if (gameplay.mode == SETTINGS)
       {
         noTone();
-        SSD1306_ClearDisplay();
         settingsMode();
         gameplay.mode = PLAYER_VS_PLAYER;
         showMenu();
@@ -301,11 +303,12 @@ void chooseMode(void)
   }
 
   noTone();
-  SSD1306_ClearDisplay();
 }
 
 void showSettings(void)
 {
+  SSD1306_ClearDisplay();
+
   SSD1306_SetTextSize(2);
   SSD1306_SetCursor(10, 10);
   SSD1306_WriteText("SETTINGS");
@@ -371,9 +374,9 @@ void settingsMode(void)
   gameplay.settings = MAX_SCORE;
   showSettings();
   SCR1_Timer_Delay(200000);
+
   while (1)
   {
-    SSD1306_ClearDisplay();
     if (HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_1_PORT, 1 << BUTTON_DOWN_PLAYER_1_PIN) == GPIO_PIN_HIGH)
     {
       switch (gameplay.settings)
@@ -400,58 +403,41 @@ void settingsMode(void)
 
     if (HAL_GPIO_ReadPin(BUTTON_UP_PLAYER_1_PORT, 1 << BUTTON_UP_PLAYER_1_PIN) == GPIO_PIN_HIGH)
     {
-      if (gameplay.settings == GO_BACK)
+      if (gameplay.settings == MAX_SCORE)
       {
-        break;
+        if (gameplay.max_score != 10)
+        {
+          ++gameplay.max_score;
+        }
+        else
+        {
+          gameplay.max_score = 1;
+        }
+      }
+      else if (gameplay.settings == MUSIC)
+      {
+        if (gameplay.music == RETRO)
+        {
+          gameplay.music = METAL;
+        }
+        else if (gameplay.music == METAL)
+        {
+          gameplay.music = OFF;
+        }
+        else
+        {
+          gameplay.music = RETRO;
+        }
       }
       else
       {
-        switch (gameplay.settings)
-        {
-          case (MAX_SCORE):
-
-            if (gameplay.max_score != 10)
-            {
-              ++gameplay.max_score;
-            }
-            else
-            {
-              gameplay.max_score = 1;
-            }
-
-            break;
-
-          case (MUSIC):
-
-            if (gameplay.music == RETRO)
-            {
-              gameplay.music = METAL;
-            }
-            else if (gameplay.music == METAL)
-            {
-              gameplay.music = OFF;
-            }
-            else
-            {
-              gameplay.music = RETRO;
-            }
-
-            break;
-        }
-        showSettings();
-        SCR1_Timer_Delay(200000);
+        break;
       }
+
+      showSettings();
+      SCR1_Timer_Delay(200000);
     }
   }
-
-  SSD1306_ClearDisplay();
-}
-
-void initGameplay(void)
-{
-  gameplay.max_score = 3;
-  gameplay.settings = MAX_SCORE;
-  gameplay.music = RETRO;
 }
 
 void initGraphics(void)
