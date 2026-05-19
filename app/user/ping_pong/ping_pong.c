@@ -531,65 +531,65 @@ void changeOrbPosition(Orb * orb)
 bool changeOrbDirIfCollisions(Orb * orb, Player * player_1, Player * player_2)
 {
   if (orb->x <= 0)
-    {
-      incScorePlayer_2();
-      return 1;
-    }
-    else if (orb->x >= (SSD1306_WIDTH - ORB_RADIUS))
-    {
-      incScorePlayer_1();
-      return 1;
-    }
+  {
+    incScorePlayer_2();
+    return 1;
+  }
+  else if (orb->x >= (SSD1306_WIDTH - ORB_RADIUS))
+  {
+    incScorePlayer_1();
+    return 1;
+  }
 
-    if (orb->y <= 0)
-    {
-      doCollisionSound();
-      orb->y_direction = true;
-      orb->y_speed = ORB_SPEED_RAND();
-    }
-    else if (orb->y >= (SSD1306_HEIGHT - ORB_RADIUS))
-    {
-      doCollisionSound();
-      orb->y_direction = false;
-      orb->y_speed = ORB_SPEED_RAND();
-    }
+  if (orb->y <= 0)
+  {
+    doCollisionSound();
+    orb->y_direction = true;
+    orb->y_speed = ORB_SPEED_RAND();
+  }
+  else if (orb->y >= (SSD1306_HEIGHT - ORB_RADIUS))
+  {
+    doCollisionSound();
+    orb->y_direction = false;
+    orb->y_speed = ORB_SPEED_RAND();
+  }
 
-    if ( (orb->y <= (player_1->y + PLATFORM_HEIGHT)) && (orb->y >= player_1->y) && (orb->x <= (player_1->x + PLATFORM_WIDTH + ORB_RADIUS)) )
-    {
-      doCollisionSound();
-      orb->x_direction = true;
-      orb->x_speed = ORB_SPEED_RAND();
-    }
-    else if ( (orb->y <= (player_2->y + PLATFORM_HEIGHT)) && (orb->y >= player_2->y) && (orb->x >= (player_2->x - ORB_RADIUS)) )
-    {
-      doCollisionSound();
-      orb->x_direction = false;
-      orb->x_speed = ORB_SPEED_RAND();
-    }
-    return 0;
+  if ( (orb->y <= (player_1->y + PLATFORM_HEIGHT)) && (orb->y >= player_1->y) && (orb->x <= (player_1->x + PLATFORM_WIDTH + ORB_RADIUS)) )
+  {
+    doCollisionSound();
+    orb->x_direction = true;
+    orb->x_speed = ORB_SPEED_RAND();
+  }
+  else if ( (orb->y <= (player_2->y + PLATFORM_HEIGHT)) && (orb->y >= player_2->y) && (orb->x >= (player_2->x - ORB_RADIUS)) )
+  {
+    doCollisionSound();
+    orb->x_direction = false;
+    orb->x_speed = ORB_SPEED_RAND();
+  }
+  return 0;
 }
 
 void changePlayersPosIfButtonsPressed(Player * player_1, Player * player_2)
 {
   if (player_1->y > 0 && HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_1_PORT, 1 << BUTTON_DOWN_PLAYER_1_PIN) == GPIO_PIN_HIGH)
-    {
-      player_1->y -= PLAYER_SPEED;
-    }
+  {
+    player_1->y -= PLAYER_SPEED;
+  }
 
-    if (player_1->y < (SSD1306_HEIGHT - PLATFORM_HEIGHT) && HAL_GPIO_ReadPin(BUTTON_UP_PLAYER_1_PORT, 1 << BUTTON_UP_PLAYER_1_PIN) == GPIO_PIN_HIGH)
-    {
-      player_1->y += PLAYER_SPEED;
-    }
+  if (player_1->y < (SSD1306_HEIGHT - PLATFORM_HEIGHT) && HAL_GPIO_ReadPin(BUTTON_UP_PLAYER_1_PORT, 1 << BUTTON_UP_PLAYER_1_PIN) == GPIO_PIN_HIGH)
+  {
+    player_1->y += PLAYER_SPEED;
+  }
 
-    if (player_2->y > 0 && HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_2_PORT, 1 << BUTTON_DOWN_PLAYER_2_PIN) == GPIO_PIN_HIGH)
-    {
-      player_2->y -= PLAYER_SPEED;
-    }
+  if (player_2->y > 0 && HAL_GPIO_ReadPin(BUTTON_DOWN_PLAYER_2_PORT, 1 << BUTTON_DOWN_PLAYER_2_PIN) == GPIO_PIN_HIGH)
+  {
+    player_2->y -= PLAYER_SPEED;
+  }
 
-    if (player_2->y < (SSD1306_HEIGHT - PLATFORM_HEIGHT) && HAL_GPIO_ReadPin(BUTTON_UP_PLAYER_2_PORT, 1 << BUTTON_UP_PLAYER_2_PIN) == GPIO_PIN_HIGH)
-    {
-      player_2->y += PLAYER_SPEED;
-    }
+  if (player_2->y < (SSD1306_HEIGHT - PLATFORM_HEIGHT) && HAL_GPIO_ReadPin(BUTTON_UP_PLAYER_2_PORT, 1 << BUTTON_UP_PLAYER_2_PIN) == GPIO_PIN_HIGH)
+  {
+    player_2->y += PLAYER_SPEED;
+  }
 }
 
 void changePlayerPosIfButtonPressedAndManageRobot(Player * player, Robot * robot)
