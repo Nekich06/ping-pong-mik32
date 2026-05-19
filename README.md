@@ -1,4 +1,4 @@
-[MIK32_datasheet_v2.2.2 (3).pdf](https://github.com/user-attachments/files/28034383/MIK32_datasheet_v2.2.2.3.pdf)# ping-pong-mik32
+# ping-pong-mik32
 ## Brief Description
 An implementation of arcade Ping-Pong for ELBEAR ACE-UNO board based on the MIK32 Amur MCU.
 **Provided Features:**
