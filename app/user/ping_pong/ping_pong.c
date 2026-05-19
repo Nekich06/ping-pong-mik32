@@ -56,22 +56,25 @@ static struct Gameplay
     PLAYER_VS_ROBOT,
     SETTINGS
   } mode;
+
   enum Settings
   {
     MAX_SCORE,
     MUSIC,
     GO_BACK
   } settings;
-  enum Music music;
-  uint8_t max_score;
-  bool is_game_over;
-  bool player_1_won;
+
   struct Counter
   {
     int8_t player_1_score;
     int8_t player_2_score;
     char score_buf[3];
   } counter;
+
+  enum Music music;
+  uint8_t max_score;
+  bool is_game_over;
+  bool player_1_won;
 } gameplay;
 
 
