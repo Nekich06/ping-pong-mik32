@@ -1,12 +1,14 @@
 # ping-pong-mik32
 ## Brief Description
 An implementation of arcade Ping-Pong for ELBEAR ACE-UNO board based on the MIK32 Amur MCU.
+
 **Provided Features:**
 - Menu
 - PvP
 - PvE
 - Audio Support
 - Settings Section
+
 Built with the `mik32-hal` and `mik32-shared` submodules.
 ## Hardware
 **Components required:**
@@ -45,7 +47,9 @@ make
 ```
 make flash
 ```
-## Wiring Plan
+## Wiring Diagram / Plan
+<img width="1968" height="1845" alt="ping-pong-wire-plan" src="https://github.com/user-attachments/assets/bbb96b51-9347-4a0d-b039-42144e9a3b3a" />
+
 ### SSD1306 OLED Display (SPI, 128x64)
 
 | **Display Pins** | **ACE-UNO** |
